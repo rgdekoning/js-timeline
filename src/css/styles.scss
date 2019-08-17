@@ -1,0 +1,10 @@
+$gutter: 20px;
+
+@import 'components/timeline';
+
+body {
+  background: pink;
+  font-family: sans-serif;
+  margin: 0;
+  padding: $gutter;
+}
