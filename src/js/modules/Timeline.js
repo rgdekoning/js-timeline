@@ -1,9 +1,9 @@
 class Timeline {
   constructor() {
     this.config = {
-      wrapperSelector: 'timeline__wrapper',
-      phaseSelector: 'timeline__phase-block',
-      intervalDateSelector: 'timeline__interval-date-wrapper',
+      wrapperSelector: "timeline__wrapper",
+      phaseSelector: "timeline__phase-block",
+      intervalDateSelector: "timeline__interval-date-wrapper"
     };
   }
 
@@ -23,10 +23,15 @@ class Timeline {
   }
 
   setupTimelineIntervalDate() {
-    const nodes = this.node.querySelectorAll(`.${this.config.intervalDateSelector}`);
+    const nodes = this.node.querySelectorAll(
+      `.${this.config.intervalDateSelector}`
+    );
 
     for (let i = 0; i < nodes.length; i++) {
-      const timelineIntervalDate = new TimelineIntervalDate(nodes[i], this.node);
+      const timelineIntervalDate = new TimelineIntervalDate(
+        nodes[i],
+        this.node
+      );
       timelineIntervalDate.init();
     }
   }
@@ -38,11 +43,11 @@ class TimelinePhaseBlock {
     this.scrollTrigger = scrollTrigger;
 
     this.config = {
-      titleSelector: 'timeline__phase-title',
-      contentSelector: 'timeline__phase-content',
-      titleClassActive: 'timeline__phase-title--active',
-      contentClassActive: 'timeline__phase-content--active',
-      fadeThreshold: 250,
+      titleSelector: "timeline__phase-title",
+      contentSelector: "timeline__phase-content",
+      titleClassActive: "timeline__phase-title--active",
+      contentClassActive: "timeline__phase-content--active",
+      fadeThreshold: 250
     };
   }
 
@@ -56,7 +61,7 @@ class TimelinePhaseBlock {
   }
 
   addEventListeners() {
-    this.scrollTrigger.addEventListener('scroll', event => {
+    this.scrollTrigger.addEventListener("scroll", event => {
       this.handleScrollEvent();
     });
   }
@@ -83,27 +88,34 @@ class TimelinePhaseBlock {
       }
 
       if (
-        (!this.visibility.left && this.visibility.right && !this.visibility.centered) ||
-        (this.visibility.left && !this.visibility.right && !this.visibility.centered)
+        (!this.visibility.left &&
+          this.visibility.right &&
+          !this.visibility.centered) ||
+        (this.visibility.left &&
+          !this.visibility.right &&
+          !this.visibility.centered)
       ) {
         // partially visible on one side, start fading
         let opacity = 0.65;
         if (this.visibility.position.right <= this.config.fadeThreshold) {
-          opacity = (opacity * this.visibility.position.right) / this.config.fadeThreshold;
+          opacity =
+            (opacity * this.visibility.position.right) /
+            this.config.fadeThreshold;
         } else if (
           this.visibility.position.left >=
           this.visibility.clientWidth - this.config.fadeThreshold
         ) {
           opacity =
-            (opacity * (this.visibility.clientWidth - this.visibility.position.left)) /
+            (opacity *
+              (this.visibility.clientWidth - this.visibility.position.left)) /
             this.config.fadeThreshold;
         }
         this.title.style.opacity = opacity;
         this.content.style.opacity = opacity;
       } else {
         // reset opacity, so css styling can be applied
-        this.title.style.opacity = '';
-        this.content.style.opacity = '';
+        this.title.style.opacity = "";
+        this.content.style.opacity = "";
       }
     }
   }
@@ -115,7 +127,7 @@ class TimelineIntervalDate {
     this.scrollTrigger = scrollTrigger;
 
     this.config = {
-      textSelector: 'timeline__interval-date',
+      textSelector: "timeline__interval-date"
     };
 
     this.visibility = {
@@ -135,7 +147,7 @@ class TimelineIntervalDate {
   }
 
   addEventListeners() {
-    this.scrollTrigger.addEventListener('scroll', event => {
+    this.scrollTrigger.addEventListener("scroll", event => {
       this.handleScrollEvent();
     });
   }
@@ -155,26 +167,28 @@ class TimelineIntervalDate {
       // don't do anything if element is not visible
       if (this.visibility.filled) {
         // element is bigger than screen, center text on screen
-        const offset = this.visibility.clientWidth / 2 - this.visibility.position.left;
+        const offset =
+          this.visibility.clientWidth / 2 - this.visibility.position.left;
         this.text.style.marginLeft =
           offset < offsetThreshold ? `${offsetThreshold}px` : `${offset}px`;
-        this.text.style.marginRight = 'auto';
+        this.text.style.marginRight = "auto";
       } else if (this.visibility.left && !this.visibility.right) {
         // partially visible on right side, center text in visible part of wrapper
-        const offset = (this.visibility.clientWidth - this.visibility.position.left) / 2;
+        const offset =
+          (this.visibility.clientWidth - this.visibility.position.left) / 2;
         this.text.style.marginLeft = `${offset}px`;
-        this.text.style.marginRight = 'auto';
+        this.text.style.marginRight = "auto";
       } else if (!this.visibility.left && this.visibility.right) {
         // partially visible on left side, center in visible part of wrapper
         const offset = (this.visibility.position.right - this.textWidth) / 2;
         this.text.style.marginRight =
           offset < offsetThreshold ? `${offsetThreshold}px` : `${offset}px`;
-        this.text.style.marginLeft = 'auto';
+        this.text.style.marginLeft = "auto";
       } else {
         // element is completely visible, so center text
         // should be same as:  this.visibility.completely
-        this.text.style.marginLeft = 'auto';
-        this.text.style.marginRight = 'auto';
+        this.text.style.marginLeft = "auto";
+        this.text.style.marginRight = "auto";
       }
     }
   }
@@ -188,7 +202,8 @@ const getNodeVisibility = node => {
   const left = position.left <= clientWidth && position.left >= 0;
   const right = position.right <= clientWidth && position.right >= 0;
 
-  const centered = position.left < clientWidth / 2 && position.right > clientWidth / 2;
+  const centered =
+    position.left < clientWidth / 2 && position.right > clientWidth / 2;
   const filled = position.left <= 0 && position.right >= clientWidth;
   const completely = left && right;
   const visible = left || right || filled;
@@ -204,7 +219,7 @@ const getNodeVisibility = node => {
     right,
     position,
     clientWidth,
-    clientWidthRatio,
+    clientWidthRatio
   };
 };
 
@@ -215,8 +230,9 @@ const TimelineModule = (() => {
   };
 
   return {
-    init,
+    init
   };
 })();
 
 export default TimelineModule;
+// test codesandbox git push
