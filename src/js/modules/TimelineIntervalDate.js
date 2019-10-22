@@ -1,6 +1,5 @@
 import getNodeVisibility from '../helpers/getNodeVisibility';
 
-
 class TimelineIntervalDate {
   constructor(node, scrollTrigger) {
     this.node = node;
@@ -10,11 +9,7 @@ class TimelineIntervalDate {
       textSelector: 'timeline__interval-date',
     };
 
-    this.visibility = {
-    // not needed?
-    // left: false,
-    // right: false,
-    };
+    this.handleScrollEvent = this.handleScrollEvent.bind(this);
   }
 
   init() {
@@ -27,9 +22,10 @@ class TimelineIntervalDate {
   }
 
   addEventListeners() {
-    this.scrollTrigger.addEventListener('scroll', () => {
-      this.handleScrollEvent();
-    });
+    this.scrollTrigger.addEventListener(
+      'scroll',
+      this.handleScrollEvent,
+    );
   }
 
   handleScrollEvent() {
@@ -42,30 +38,38 @@ class TimelineIntervalDate {
   }
 
   setTextProperties() {
-    const offsetThreshold = 50;
-    if (this.visibility.visible) {
     // don't do anything if element is not visible
-      if (this.visibility.filled) {
-        // element is bigger than screen, center text on screen
-        const offset = this.visibility.clientWidth / 2 - this.visibility.position.left;
-        this.text.style.marginLeft = offset < offsetThreshold ? `${offsetThreshold}px` : `${offset}px`;
-        this.text.style.marginRight = 'auto';
-      } else if (this.visibility.left && !this.visibility.right) {
-        // partially visible on right side, center text in visible part of wrapper
-        const offset = (this.visibility.clientWidth - this.visibility.position.left) / 2;
-        this.text.style.marginLeft = `${offset}px`;
-        this.text.style.marginRight = 'auto';
-      } else if (!this.visibility.left && this.visibility.right) {
-        // partially visible on left side, center in visible part of wrapper
-        const offset = (this.visibility.position.right - this.textWidth) / 2;
-        this.text.style.marginRight = offset < offsetThreshold ? `${offsetThreshold}px` : `${offset}px`;
-        this.text.style.marginLeft = 'auto';
-      } else {
-        // element is completely visible, so center text
-        // should be same as:  this.visibility.completely
-        this.text.style.marginLeft = 'auto';
-        this.text.style.marginRight = 'auto';
-      }
+    if (!this.visibility.visible) return;
+
+    const offsetThreshold = 60;
+    // default: centered
+    // element is completely visible, so center text
+    // should be same as:  this.visibility.completely
+    let offsetLeft = 'auto';
+
+    if (this.visibility.filled) {
+      // element is bigger than screen, center text on screen
+      const offset = this.visibility.clientWidth / 2 - this.visibility.position.left;
+      offsetLeft = offset < offsetThreshold ? offsetThreshold : offset;
+    } else if (this.visibility.left && !this.visibility.right) {
+      // partially visible on right side, center text in visible part of wrapper
+      const offset = (this.visibility.clientWidth - this.visibility.position.left) / 2;
+      offsetLeft = offset < offsetThreshold ? offsetThreshold : offset;
+    } else if (!this.visibility.left && this.visibility.right) {
+      // partially visible on left side, center in visible part of wrapper
+      const offsetThresholdRight = this.visibility.position.width - offsetThreshold;
+      const offset = this.visibility.position.width - this.visibility.position.right / 2;
+      offsetLeft = offset < offsetThresholdRight ? offset : offsetThresholdRight;
+    }
+
+    this.setTextOffset(offsetLeft);
+  }
+
+  setTextOffset(left) {
+    const offsetLeft = `${Math.floor(left)}px`;
+
+    if (this.node.style.paddingLeft !== offsetLeft) {
+      this.node.style.paddingLeft = offsetLeft;
     }
   }
 }
