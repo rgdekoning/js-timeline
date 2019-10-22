@@ -1,5 +1,6 @@
 import TimelinePhaseBlock from './TimelinePhaseBlock';
 import TimelineIntervalDate from './TimelineIntervalDate';
+import TouchHorizontalSlider from './TouchHorizontalSlider';
 
 class Timeline {
   constructor() {
@@ -14,6 +15,12 @@ class Timeline {
     this.node = document.querySelector(`.${this.config.wrapperSelector}`);
     this.setupTimelinePhase();
     this.setupTimelineIntervalDate();
+
+    this.touchHorizontalSlider = new TouchHorizontalSlider(
+      this.config.wrapperSelector,
+      this.config.phaseSelector,
+    );
+    this.touchHorizontalSlider.init();
   }
 
   setupTimelinePhase() {
